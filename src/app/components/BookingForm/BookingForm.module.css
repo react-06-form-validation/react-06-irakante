@@ -50,3 +50,10 @@
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
+.errorBanner {
+  background-color: #ffdddd;
+  color: #d8000c;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}

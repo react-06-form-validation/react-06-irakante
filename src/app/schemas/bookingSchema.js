@@ -21,9 +21,11 @@ export const createBookingSchema = (availableTimeSlots = []) =>
       .min(2, "Booker name must be at least 2 characters long"),
 
     bookerEmail: z
-      .email("Invalid email address")
+      .string()
       .optional()
-      .or(z.literal('')),
+      .refine((val) => !val || z.string().email().safeParse(val).success, {
+        message: "Invalid email address"
+      }),
 
     eventName: z
       .string({ required_error: "Event name is required" })
