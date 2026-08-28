@@ -49,5 +49,5 @@ export const createBookingSchema = (availableTimeSlots = []) =>
       }),
 
     eventLink: z
-      .url("Invalid input")
+      .url("Invalid URL. Please enter a valid event link")
   });
