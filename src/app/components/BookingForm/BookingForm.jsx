@@ -11,6 +11,7 @@ import styles from './BookingForm.module.css';
 export default function BookingForm() {
   const [timeSlots, setTimeSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
 
@@ -19,13 +20,19 @@ export default function BookingForm() {
     const fetchSlots = async () => {
       try {
         const response = await fetch('/api/time-slots');
+        if (!response.ok) throw new Error('Failed to fetch time slots');
         const data = await response.json();
 
         if (isMounted) {
           setTimeSlots(data);
+          setError(null);
         }
       } catch (error) {
-        console.error("Failed to fetch time slots:", error);
+        if (isMounted) {
+          console.error(err);
+          setError('Unable to load time slots. Please try again.');
+          setTimeSlots([]);
+        }
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -62,7 +69,7 @@ export default function BookingForm() {
           Booker Name
         </label>
         <input id="bookerName" className={styles.input}  {...register('bookerName')} />
-        <ErrorMessage message={errors.bookerName?.message?.toString()} />
+        <ErrorMessage message={errors.bookerName?.message} />
       </div>
 
       <div className={styles.inputGroup}>
@@ -70,7 +77,7 @@ export default function BookingForm() {
           Booker Email
         </label>
         <input id="bookerEmail" className={styles.input} type="email"  {...register('bookerEmail')} />
-        <ErrorMessage message={errors.bookerEmail?.message?.toString()} />
+        <ErrorMessage message={errors.bookerEmail?.message} />
       </div>
 
       <div className={styles.inputGroup}>
@@ -78,7 +85,7 @@ export default function BookingForm() {
           Event Name
         </label>
         <input id="eventName" className={styles.input} {...register('eventName')} />
-        <ErrorMessage message={errors.eventName?.message?.toString()} />
+        <ErrorMessage message={errors.eventName?.message} />
       </div>
 
       <div className={styles.inputGroup}>
@@ -86,7 +93,7 @@ export default function BookingForm() {
           Event Date
         </label>
         <input id="eventDate" className={styles.input} type="date"  {...register('eventDate', { valueAsDate: true })} />
-        <ErrorMessage message={errors.eventDate?.message?.toString()} />
+        <ErrorMessage message={errors.eventDate?.message} />
       </div>
 
       <div className={styles.inputGroup}>
@@ -94,7 +101,7 @@ export default function BookingForm() {
           Number of Guests
         </label>
         <input id="numberOfGuests" className={styles.input} type="number"  {...register('numberOfGuests')} />
-        <ErrorMessage message={errors.numberOfGuests?.message?.toString()} />
+        <ErrorMessage message={errors.numberOfGuests?.message} />
       </div>
 
       <div className={styles.inputGroup}>
@@ -111,7 +118,7 @@ export default function BookingForm() {
         </select>
         {isLoading && <p>Loading time slots...</p>}
         {!isLoading && timeSlots.length === 0 && <p>No time slots available.</p>}
-        <ErrorMessage message={errors.timeSlot?.message?.toString()} />
+        <ErrorMessage message={errors.timeSlot?.message} />
       </div>
 
       <div className={styles.inputGroup}>
@@ -119,7 +126,7 @@ export default function BookingForm() {
           Event Link (Online)
         </label>
         <input id="eventLink" className={styles.input} type="url"  {...register('eventLink')} />
-        <ErrorMessage message={errors.eventLink?.message?.toString()} />
+        <ErrorMessage message={errors.eventLink?.message} />
       </div>
 
       <button className={styles.button} type="submit">
