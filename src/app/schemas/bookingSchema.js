@@ -18,16 +18,16 @@ export const createBookingSchema = (availableTimeSlots = []) =>
   z.object({
     bookerName: z
       .string({ required_error: "Booker name is required" })
-      .min(2, "Name must be at least 2 characters"),
+      .min(2, "Booker name must be at least 2 characters long"),
 
     bookerEmail: z
-      .email("Invalid email format")
+      .email("Invalid email address")
       .optional()
       .or(z.literal('')),
 
     eventName: z
       .string({ required_error: "Event name is required" })
-      .min(2, "Event name must be at least 2 characters"),
+      .min(2, "Event name must be at least 2 characters long"),
 
     eventDate: z
       .date({ required_error: "Event date is required" })
@@ -40,14 +40,14 @@ export const createBookingSchema = (availableTimeSlots = []) =>
       .number({ required_error: "Number of guests is required" })
       .int("Guests must be an integer")
       .min(1, "Minimum 1 guest required")
-      .max(10, "Maximum 10 guests allowed"),
+      .max(10, "Number of Guests must be less than or equal to 10"),
 
     timeSlot: z
       .string({ required_error: "Time slot is required" })
       .refine((slot) => availableTimeSlots.includes(slot), {
-        message: "Selected time slot is invalid or unavailable",
+        message: "Selected time slot is unavailable",
       }),
 
     eventLink: z
-      .url("Invalid URL format")
+      .url("Invalid URL. Please enter a valid event link")
   });
