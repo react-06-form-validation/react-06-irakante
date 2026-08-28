@@ -29,7 +29,7 @@ export default function BookingForm() {
         }
       } catch (error) {
         if (isMounted) {
-          console.error(err);
+          console.error(error);
           setError('Unable to load time slots. Please try again.');
           setTimeSlots([]);
         }
@@ -51,11 +51,11 @@ export default function BookingForm() {
     return zodResolver(createBookingSchema(timeSlots));
   }, [timeSlots]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver });
+   const {
+  register,
+  handleSubmit,
+  formState: { errors, isSubmitting },
+} = useForm({ resolver });
 
   const onSubmit = (data) => {
     console.log("Form submitted with data:", data);
@@ -100,7 +100,8 @@ export default function BookingForm() {
         <label htmlFor="numberOfGuests" className={styles.label}>
           Number of Guests
         </label>
-        <input id="numberOfGuests" className={styles.input} type="number"  {...register('numberOfGuests')} />
+        <input id="numberOfGuests" className={styles.input} type="number" 
+         {...register('numberOfGuests', { valueAsNumber: true })}/>
         <ErrorMessage message={errors.numberOfGuests?.message} />
       </div>
 
@@ -129,7 +130,7 @@ export default function BookingForm() {
         <ErrorMessage message={errors.eventLink?.message} />
       </div>
 
-      <button className={styles.button} type="submit">
+      <button className={styles.button} type="submit"  disabled={isLoading || isSubmitting || error}>
         Book Event
       </button>
     </form>
